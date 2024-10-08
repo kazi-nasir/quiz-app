@@ -211,15 +211,3 @@ function validateSingleSet(set) {
 
     return true;
 }
-
-function addImportButton() {
-    const questionSetsTab = document.getElementById('question-sets-tab');
-    if (questionSetsTab) {
-        const importBtn = document.createElement('button');
-        importBtn.id = 'importBtn';
-        importBtn.textContent = 'Import';
-        importBtn.className = 'ml-4 bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300';
-        questionSetsTab.parentNode.insertBefore(importBtn, questionSetsTab.nextSibling);
-        setupImportExport();
-    }
-}

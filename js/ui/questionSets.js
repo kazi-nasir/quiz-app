@@ -36,7 +36,7 @@ function loadQuestionSetsContent(contentElement) {
     setupSearchAndFilter();
     setupAddNewSet();
     setupEditAndDeleteButtons();
-    addImportButton();
+    setupImportExport();
 }
 
 function generateTagOptions() {
