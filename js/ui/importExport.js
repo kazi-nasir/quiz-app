@@ -123,7 +123,7 @@ function showImportModal() {
 
                 if (validSets.length > 0) {
                     // Update the existing questionSets array instead of reassigning
-                    questionSets.push(...validSets);
+                    addQuestionSet(...validSets);
                     document.getElementById('importModal').remove();
                     loadContent('question-sets');
                     showToast(`${validSets.length} question set(s) imported successfully`);

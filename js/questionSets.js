@@ -1,5 +1,5 @@
-function addQuestionSet(set) {
-    questionSets.push(set);
+function addQuestionSet(...sets) {
+    questionSets.push(...sets);
 }
 
 function updateQuestionSet(updatedSet) {

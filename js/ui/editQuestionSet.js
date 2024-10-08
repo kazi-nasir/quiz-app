@@ -84,6 +84,7 @@ function editQuestionSet(id) {
             set.tags = tags;
             set.questions = questions;
             
+            updateQuestionSet(set);
             document.getElementById('editSetForm').remove();
             window.loadContent('question-sets'); // Use the global loadContent function
             showToast('Question set updated successfully');
