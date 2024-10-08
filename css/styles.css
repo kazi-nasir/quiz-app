@@ -1,0 +1,9 @@
+.dot {
+    transition: all 0.3s ease-in-out;
+}
+input:checked ~ .dot {
+    transform: translateX(100%);
+}
+input:checked ~ .block {
+    background-color: #4CAF50;
+}
