@@ -140,7 +140,15 @@ function showImportModal() {
 
 function exportQuestionSet(id) {
     const set = questionSets.find(s => s.id === id);
-    const jsonString = JSON.stringify(set, null, 2);
+    // Create a deep copy of the set and remove GUIDs
+    const exportSet = JSON.parse(JSON.stringify(set));
+    delete exportSet.id;
+    exportSet.questions.forEach(question => {
+        delete question.id;
+        question.options.forEach(option => delete option.id);
+    });
+    
+    const jsonString = JSON.stringify(exportSet, null, 2);
     const blob = new Blob([jsonString], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     
@@ -181,14 +189,20 @@ function validateImportedData(data) {
 }
 
 function validateSingleSet(set) {
-    if (!set.id || !set.title || !Array.isArray(set.questions) || !Array.isArray(set.tags)) {
+    if (!set.title || !Array.isArray(set.questions) || !Array.isArray(set.tags)) {
         return false;
     }
 
+    // Add a new GUID for the set
+    set.id = generateGUID();
+
     for (const question of set.questions) {
-        if (!question.id || !question.name || !Array.isArray(question.options)) {
+        if (!question.name || !Array.isArray(question.options)) {
             return false;
         }
+
+        // Add a new GUID for the question
+        question.id = generateGUID();
 
         if (question.options.length < 2) {
             return false;
@@ -196,9 +210,11 @@ function validateSingleSet(set) {
 
         let hasCorrectAnswer = false;
         for (const option of question.options) {
-            if (!option.id || !option.name || typeof option.isCorrect !== 'boolean') {
+            if (!option.name || typeof option.isCorrect !== 'boolean') {
                 return false;
             }
+            // Add a new GUID for the option
+            option.id = generateGUID();
             if (option.isCorrect) {
                 hasCorrectAnswer = true;
             }

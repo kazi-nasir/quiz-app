@@ -28,4 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load home content by default
     loadContent('home');
+
+    // Load question sets from localStorage
+    loadQuestionSetsFromLocalStorage();
 });

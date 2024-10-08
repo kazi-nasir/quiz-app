@@ -7,3 +7,20 @@ input:checked ~ .dot {
 input:checked ~ .block {
     background-color: #4CAF50;
 }
+.tooltip-trigger {
+    position: relative;
+}
+
+.tooltip-trigger:hover .tooltip {
+    opacity: 1;
+}
+
+.tooltip {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
