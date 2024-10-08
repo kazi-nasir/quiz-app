@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
     setupDarkMode();
     // Remove this line: setupImportExport();
 
-    // Load content based on tab
-    function loadContent(tab) {
+    // Make loadContent globally accessible
+    window.loadContent = function(tab) {
         switch (tab) {
             case 'home':
                 loadHomeContent(content);

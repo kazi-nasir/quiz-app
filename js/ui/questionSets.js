@@ -112,9 +112,15 @@ function setupAddNewSet() {
                 tags: tags
             };
             
-            questionSets.push(newSet);
+            // Add the new set to the questionSets array
+            addQuestionSet(newSet);
+            
+            // Remove the form
             document.getElementById('newSetForm').remove();
-            loadContent('question-sets');
+            
+            // Reload the question sets content
+            loadQuestionSetsContent(document.getElementById('content'));
+            
             showToast('Question set created successfully');
         });
         
@@ -185,6 +191,8 @@ function setupEditAndDeleteButtons() {
         button.addEventListener('click', (e) => {
             const id = e.target.closest('.delete-set').dataset.id;
             deleteQuestionSet(id);
+            loadQuestionSetsContent(document.getElementById('content'));            
+            showToast('Question set deleted successfully');
         });
     });
 

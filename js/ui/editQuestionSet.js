@@ -1,4 +1,3 @@
-
 function editQuestionSet(id) {
     const set = questionSets.find(s => s.id === id);
         const editForm = `
@@ -86,7 +85,7 @@ function editQuestionSet(id) {
             set.questions = questions;
             
             document.getElementById('editSetForm').remove();
-            loadContent('question-sets');
+            window.loadContent('question-sets'); // Use the global loadContent function
             showToast('Question set updated successfully');
         });
         
