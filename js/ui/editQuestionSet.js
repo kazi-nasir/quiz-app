@@ -249,14 +249,22 @@ function getQuestionsFromForm() {
             const options = [];
             const optionItems = item.querySelectorAll('.option-item');
             
+            let correctCount = 0;
             optionItems.forEach((optionItem) => {
                 const optionId = optionItem.dataset.id;
                 const optionName = optionItem.querySelector(`input[name="option-${optionId}"]`).value;
                 const isCorrect = optionItem.querySelector(`input[name="correct-${optionId}"]`).checked;
+                if (isCorrect) correctCount++;
                 options.push({ id: optionId, name: optionName, isCorrect: isCorrect });
             });
             
-            questions.push({ id: questionId, name: questionName, note: questionNote, options: options });
+            questions.push({
+                id: questionId,
+                name: questionName,
+                note: questionNote,
+                options: options,
+                isMultiSelect: correctCount > 1
+            });
         });
         
         return questions;
