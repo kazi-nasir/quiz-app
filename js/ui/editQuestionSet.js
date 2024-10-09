@@ -206,32 +206,36 @@ function addNewOption(questionItem) {
 
 function addNewQuestion() {
     const questionsList = document.getElementById('questionsList');
-        const newQuestionId = generateGUID();
-        const newQuestionHtml = `
-            <div class="question-item mb-4 p-4 border rounded-md" data-id="${newQuestionId}">
-                <div class="flex justify-between items-center mb-2">
-                    <input type="text" name="question-${newQuestionId}" placeholder="Question" 
-                           class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                    <button type="button" class="delete-question ml-2 text-red-500 hover:text-red-600">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="options-list"></div>
-                <button type="button" class="add-option mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-sm">
-                    Add Option
+    const newQuestionId = generateGUID();
+    const newQuestionHtml = `
+        <div class="question-item mb-4 p-4 border rounded-md" data-id="${newQuestionId}">
+            <div class="flex justify-between items-center mb-2">
+                <input type="text" name="question-${newQuestionId}" placeholder="Question" 
+                       class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                <button type="button" class="delete-question ml-2 text-red-500 hover:text-red-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                    </svg>
                 </button>
             </div>
-        `;
-        questionsList.insertAdjacentHTML('beforeend', newQuestionHtml);
-        
-        // Add two options by default
-        const newQuestionItem = questionsList.lastElementChild;
-        addNewOption(newQuestionItem);
-        addNewOption(newQuestionItem);
+            <div class="mb-2">
+                <textarea name="question-note-${newQuestionId}" placeholder="Question note" rows="2"
+                          class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"></textarea>
+            </div>
+            <div class="options-list"></div>
+            <button type="button" class="add-option mt-2 bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded text-sm">
+                Add Option
+            </button>
+        </div>
+    `;
+    questionsList.insertAdjacentHTML('beforeend', newQuestionHtml);
+    
+    // Add two options by default
+    const newQuestionItem = questionsList.lastElementChild;
+    addNewOption(newQuestionItem);
+    addNewOption(newQuestionItem);
 
-        showToast('New question added', 'success');
+    showToast('New question added', 'success');
 }
 
 function getQuestionsFromForm() {
@@ -245,14 +249,22 @@ function getQuestionsFromForm() {
             const options = [];
             const optionItems = item.querySelectorAll('.option-item');
             
+            let correctCount = 0;
             optionItems.forEach((optionItem) => {
                 const optionId = optionItem.dataset.id;
                 const optionName = optionItem.querySelector(`input[name="option-${optionId}"]`).value;
                 const isCorrect = optionItem.querySelector(`input[name="correct-${optionId}"]`).checked;
+                if (isCorrect) correctCount++;
                 options.push({ id: optionId, name: optionName, isCorrect: isCorrect });
             });
             
-            questions.push({ id: questionId, name: questionName, note: questionNote, options: options });
+            questions.push({
+                id: questionId,
+                name: questionName,
+                note: questionNote,
+                options: options,
+                isMultiSelect: correctCount > 1
+            });
         });
         
         return questions;

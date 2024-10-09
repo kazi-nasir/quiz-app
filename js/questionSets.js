@@ -14,6 +14,14 @@ function updateQuestionSet(updatedSet) {
                 note: q.note || ''
             }))
         };
+
+        // Update in localStorage if it exists
+        const storedSets = JSON.parse(localStorage.getItem('questionSets')) || [];
+        const storedIndex = storedSets.findIndex(set => set.id === updatedSet.id);
+        if (storedIndex !== -1) {
+            storedSets[storedIndex] = questionSets[index];
+            localStorage.setItem('questionSets', JSON.stringify(storedSets));
+        }
     }
 }
 
