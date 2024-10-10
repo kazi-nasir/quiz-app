@@ -171,7 +171,7 @@ function generateQuestionSetCards(sets = questionSets) {
                     Take Quiz
                 </button>
                 <div class="flex justify-center space-x-2 w-full">
-                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm flex-1 flex items-center justify-center">
+                    <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm flex-1 flex items-center justify-center view-set" data-id="${set.id}">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
@@ -196,6 +196,7 @@ function generateQuestionSetCards(sets = questionSets) {
 function setupEditAndDeleteButtons() {
     const editButtons = document.querySelectorAll('.edit-set');
     const deleteButtons = document.querySelectorAll('.delete-set');
+    const viewButtons = document.querySelectorAll('.view-set');
 
     editButtons.forEach(button => {
         button.addEventListener('click', (e) => {
@@ -210,6 +211,13 @@ function setupEditAndDeleteButtons() {
             deleteQuestionSet(id);
             loadQuestionSetsContent(document.getElementById('content'));            
             showToast('Question set deleted successfully');
+        });
+    });
+
+    viewButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.target.closest('.view-set').dataset.id;
+            viewQuestionSet(id);
         });
     });
 
@@ -232,4 +240,31 @@ function setupEditAndDeleteButtons() {
             }
         });
     });
+}
+
+function createQuestionSetCard(set) {
+    const card = document.createElement('div');
+    card.className = 'bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-4';
+    card.innerHTML = `
+        <h2 class="text-xl font-semibold mb-2">${set.title}</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-4">${set.questions.length} questions</p>
+        <div class="flex space-x-2">
+            <button class="view-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                View
+            </button>
+            <button class="edit-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+                Edit
+            </button>
+            <button class="delete-btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                Delete
+            </button>
+        </div>
+    `;
+
+    const viewBtn = card.querySelector('.view-btn');
+    viewBtn.addEventListener('click', () => viewQuestionSet(set.id));
+
+    // ... existing edit and delete button code ...
+
+    return card;
 }
