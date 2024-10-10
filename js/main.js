@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeTab = document.getElementById('home-tab');
     const questionSetsTab = document.getElementById('question-sets-tab');
     const quizTab = document.getElementById('quiz-tab');
+    // Add this line
+    const quizCounterTab = document.getElementById('quiz-counter-tab');
 
     homeTab.addEventListener('click', (e) => {
         e.preventDefault();
@@ -17,6 +19,12 @@ document.addEventListener('DOMContentLoaded', () => {
     quizTab.addEventListener('click', (e) => {
         e.preventDefault();
         loadQuizConfig(content);
+    });
+
+    // Add this block
+    quizCounterTab.addEventListener('click', (e) => {
+        e.preventDefault();
+        createQuizCounter(content);
     });
 
     setupDarkMode();
