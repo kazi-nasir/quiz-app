@@ -53,3 +53,16 @@ select[multiple] option {
 select[multiple] option:last-child {
     border-bottom: none;
 }
+
+@keyframes gentle-pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.8;
+    }
+}
+
+.animate-gentle-pulse {
+    animation: gentle-pulse 2s ease-in-out infinite;
+}
