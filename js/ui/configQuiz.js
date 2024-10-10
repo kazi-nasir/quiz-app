@@ -1,9 +1,29 @@
 function loadQuizConfig(content) {
-    const questionSetOptions = questionSets.map(set => 
+    const questionSetOptions = generateQuestionSetOptions();
+
+    content.innerHTML = generateQuizConfigHTML(questionSetOptions);
+
+    const elements = {
+        form: document.getElementById('quizConfigForm'),
+        questionSetsSelect: document.getElementById('questionSets'),
+        questionSetConfigs: document.getElementById('questionSetConfigs'),
+        useTimerCheckbox: document.getElementById('useTimer'),
+        timeLimitContainer: document.getElementById('timeLimitContainer'),
+        timeLimitInput: document.getElementById('timeLimit'),
+        timeLimitNumber: document.getElementById('timeLimitNumber')
+    };
+
+    setupEventListeners(elements);
+}
+
+function generateQuestionSetOptions() {
+    return questionSets.map(set => 
         `<option value="${set.id}" data-question-count="${set.questions.length}">${set.title} (${set.questions.length} questions)</option>`
     ).join('');
+}
 
-    content.innerHTML = `
+function generateQuizConfigHTML(questionSetOptions) {
+    return `
         <h2 class="text-2xl font-bold mb-4">Configure Quiz</h2>
         <form id="quizConfigForm" class="space-y-4">
             <div>
@@ -32,45 +52,44 @@ function loadQuizConfig(content) {
                     <span class="text-xl font-bold">min</span>
                 </div>
             </div>
-            <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-                Start Quiz
-            </button>
+            <div class="mt-6 flex justify-center">
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full shadow-lg transform transition duration-300 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-400 focus:ring-opacity-50 animate-gentle-pulse">
+                    Start Quiz
+                </button>
+            </div>
         </form>
     `;
+}
 
-    const form = document.getElementById('quizConfigForm');
-    const questionSetsSelect = document.getElementById('questionSets');
-    const questionSetConfigs = document.getElementById('questionSetConfigs');
-    const useTimerCheckbox = document.getElementById('useTimer');
-    const timeLimitContainer = document.getElementById('timeLimitContainer');
-    const timeLimitInput = document.getElementById('timeLimit');
-    const timeLimitNumber = document.getElementById('timeLimitNumber');
+function setupEventListeners(elements) {
+    const { questionSetsSelect, questionSetConfigs, useTimerCheckbox, timeLimitContainer, timeLimitInput, timeLimitNumber, form } = elements;
 
-    questionSetsSelect.addEventListener('change', () => {
-        updateQuestionSetConfigs(questionSetsSelect, questionSetConfigs);
-    });
-
-    useTimerCheckbox.addEventListener('change', () => {
-        timeLimitContainer.style.display = useTimerCheckbox.checked ? 'block' : 'none';
-        timeLimitInput.required = useTimerCheckbox.checked;
-        timeLimitNumber.required = useTimerCheckbox.checked;
-    });
-
-    timeLimitInput.addEventListener('input', () => {
-        timeLimitNumber.value = timeLimitInput.value;
-    });
-
-    timeLimitNumber.addEventListener('input', () => {
-        timeLimitInput.value = timeLimitNumber.value;
-    });
-
+    questionSetsSelect.addEventListener('change', () => updateQuestionSetConfigs(questionSetsSelect, questionSetConfigs));
+    useTimerCheckbox.addEventListener('change', () => toggleTimerVisibility(useTimerCheckbox, timeLimitContainer, timeLimitInput, timeLimitNumber));
+    timeLimitInput.addEventListener('input', () => syncTimeInputs(timeLimitInput, timeLimitNumber));
+    timeLimitNumber.addEventListener('input', () => syncTimeInputs(timeLimitNumber, timeLimitInput));
     form.addEventListener('submit', handleQuizConfigSubmit);
+}
+
+function toggleTimerVisibility(checkbox, container, ...inputs) {
+    container.style.display = checkbox.checked ? 'block' : 'none';
+    inputs.forEach(input => input.required = checkbox.checked);
+}
+
+function syncTimeInputs(source, target) {
+    target.value = source.value;
 }
 
 function updateQuestionSetConfigs(select, configsContainer) {
     const selectedOptions = Array.from(select.selectedOptions);
     
-    configsContainer.innerHTML = selectedOptions.map(option => `
+    configsContainer.innerHTML = selectedOptions.map(generateQuestionSetConfigHTML).join('');
+
+    selectedOptions.forEach(option => setupQuestionSetInputListeners(option, configsContainer));
+}
+
+function generateQuestionSetConfigHTML(option) {
+    return `
         <div class="mt-4 p-4 border rounded dark:border-gray-600">
             <h3 class="font-bold mb-2">${option.text}</h3>
             <div class="flex items-center space-x-2">
@@ -81,48 +100,51 @@ function updateQuestionSetConfigs(select, configsContainer) {
             </div>
             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Max: ${option.dataset.questionCount} questions</p>
         </div>
-    `).join('');
+    `;
+}
 
-    // Add event listeners to handle mutual exclusivity and max question validation
-    selectedOptions.forEach(option => {
-        const countInput = configsContainer.querySelector(`input[name="questionCount_${option.value}"]`);
-        const percentInput = configsContainer.querySelector(`input[name="questionPercent_${option.value}"]`);
-        const maxQuestions = parseInt(option.dataset.questionCount);
+function setupQuestionSetInputListeners(option, configsContainer) {
+    const countInput = configsContainer.querySelector(`input[name="questionCount_${option.value}"]`);
+    const percentInput = configsContainer.querySelector(`input[name="questionPercent_${option.value}"]`);
+    const maxQuestions = parseInt(option.dataset.questionCount);
 
-        countInput.addEventListener('input', () => {
-            if (countInput.value) {
-                percentInput.value = '';
-                percentInput.disabled = true;
-                // Ensure count doesn't exceed max questions
-                if (parseInt(countInput.value) > maxQuestions) {
-                    showToast(`Maximum ${maxQuestions} questions allowed for this set.`, 'warning');
-                    countInput.value = maxQuestions;
-                }
-            } else {
-                percentInput.disabled = false;
-            }
-        });
+    countInput.addEventListener('input', () => handleQuestionInputChange(countInput, percentInput, maxQuestions));
+    percentInput.addEventListener('input', () => handleQuestionInputChange(percentInput, countInput, maxQuestions, true));
+}
 
-        percentInput.addEventListener('input', () => {
-            if (percentInput.value) {
-                countInput.value = '';
-                countInput.disabled = true;
-                // Ensure percent doesn't result in more than max questions
-                const calculatedCount = Math.ceil((parseInt(percentInput.value) / 100) * maxQuestions);
-                if (calculatedCount > maxQuestions) {
-                    showToast(`Maximum ${maxQuestions} questions (100%) allowed for this set.`, 'warning');
-                    percentInput.value = 100;
-                }
-            } else {
-                countInput.disabled = false;
-            }
-        });
-    });
+function handleQuestionInputChange(activeInput, inactiveInput, maxQuestions, isPercent = false) {
+    if (activeInput.value) {
+        inactiveInput.value = '';
+        inactiveInput.disabled = true;
+        validateQuestionInput(activeInput, maxQuestions, isPercent);
+    } else {
+        inactiveInput.disabled = false;
+    }
+}
+
+function validateQuestionInput(input, maxQuestions, isPercent) {
+    const value = parseInt(input.value);
+    const calculatedCount = isPercent ? Math.ceil((value / 100) * maxQuestions) : value;
+    
+    if (calculatedCount > maxQuestions) {
+        showToast(`Maximum ${maxQuestions} questions${isPercent ? ' (100%)' : ''} allowed for this set.`, 'warning');
+        input.value = isPercent ? 100 : maxQuestions;
+    }
 }
 
 function handleQuizConfigSubmit(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
+    const quizConfig = buildQuizConfig(formData);
+
+    if (!validateQuizConfig(quizConfig)) return;
+
+    console.log('Quiz configuration:', quizConfig);
+    showToast('Starting quiz...', 'success');
+    startQuiz(quizConfig);  // Change this line
+}
+
+function buildQuizConfig(formData) {
     const selectedSets = formData.getAll('questionSets');
     const useTimer = formData.get('useTimer') === 'on';
     const timeLimit = useTimer ? parseInt(formData.get('timeLimit')) : null;
@@ -154,8 +176,10 @@ function handleQuizConfigSubmit(event) {
         timeLimit: timeLimit
     };
 
-    // Validate that either count or percent (but not both) is provided for each set,
-    // that at least one question is selected, and that the number of questions doesn't exceed the maximum
+    return quizConfig;
+}
+
+function validateQuizConfig(quizConfig) {
     const validationResults = quizConfig.questionSets.map(set => {
         const hasCount = set.count !== null;
         const hasPercent = set.percent !== null;
@@ -184,12 +208,10 @@ function handleQuizConfigSubmit(event) {
             }
         });
         showToast(`Please correct the following:\n${errorMessages.join('\n')}`, 'error');
-        return;
+        return false;
     }
 
-    // If all validations pass, proceed with quiz configuration
-    console.log('Quiz configuration:', quizConfig);
-    showToast('Quiz configuration saved. Quiz functionality coming soon!', 'success');
+    return true;
 }
 
 // Export the loadQuizConfig function
