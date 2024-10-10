@@ -38,3 +38,18 @@ input:checked ~ .block {
     opacity: 0;
     transition: opacity 0.3s;
 }
+
+/* Styles for multiple select */
+select[multiple] {
+    height: auto;
+    min-height: 100px;
+}
+
+select[multiple] option {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+select[multiple] option:last-child {
+    border-bottom: none;
+}
