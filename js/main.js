@@ -1,14 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
     const content = document.getElementById('content');
-    const tabs = ['home', 'question-sets'];
+    const homeTab = document.getElementById('home-tab');
+    const questionSetsTab = document.getElementById('question-sets-tab');
+    const quizTab = document.getElementById('quiz-tab');
 
-    // Tab switching
-    tabs.forEach(tab => {
-        const element = document.getElementById(`${tab}-tab`);
-        element.addEventListener('click', (e) => {
-            e.preventDefault();
-            loadContent(tab);
-        });
+    homeTab.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadHomeContent(content);
+    });
+
+    questionSetsTab.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadQuestionSetsContent(content);
+    });
+
+    quizTab.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadQuizConfig(content);
     });
 
     setupDarkMode();
@@ -27,7 +35,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Load home content by default
-    loadContent('home');
+    loadHomeContent(content);
 
     // Load question sets from localStorage
     loadQuestionSetsFromLocalStorage();
