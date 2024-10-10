@@ -1,4 +1,4 @@
-function editQuestionSet(id) {
+function editQuestionSet(id, focusQuestionId = null) {
     const set = questionSets.find(s => s.id === id);
     const editForm = `
         <div id="editSetForm" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
@@ -110,6 +110,18 @@ function editQuestionSet(id) {
     });
 
     setupQuestionListeners();
+
+    // Focus on the specific question if focusQuestionId is provided
+    if (focusQuestionId) {
+        const questionElement = document.querySelector(`.question-item[data-id="${focusQuestionId}"]`);
+        if (questionElement) {
+            questionElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            questionElement.classList.add('bg-yellow-100', 'dark:bg-yellow-900');
+            setTimeout(() => {
+                questionElement.classList.remove('bg-yellow-100', 'dark:bg-yellow-900');
+            }, 2000);
+        }
+    }
 }
 
 function generateQuestionsList(questions) {
