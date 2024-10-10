@@ -140,8 +140,57 @@ function handleQuizConfigSubmit(event) {
     if (!validateQuizConfig(quizConfig)) return;
 
     console.log('Quiz configuration:', quizConfig);
-    showToast('Starting quiz...', 'success');
-    startQuiz(quizConfig);  // Change this line
+    showTransitionPage(quizConfig);
+}
+
+function showTransitionPage(quizConfig) {
+    const content = document.querySelector('#content');
+    content.innerHTML = `
+        <div class="flex flex-col items-center justify-center h-screen">
+            <h2 class="text-3xl font-bold mb-8 animate-fade-in">Preparing Your Quiz</h2>
+            <div id="countdown" class="text-6xl font-bold mb-8 animate-countdown-pulse">5</div>
+            <p id="encouragingTip" class="text-xl text-center max-w-md animate-fade-in-out"></p>
+            <div class="mt-8 flex space-x-4">
+                <div class="w-6 h-6 bg-blue-500 rounded-full animate-bounce-delay-1"></div>
+                <div class="w-6 h-6 bg-green-500 rounded-full animate-bounce-delay-2"></div>
+                <div class="w-6 h-6 bg-red-500 rounded-full animate-bounce-delay-3"></div>
+            </div>
+        </div>
+    `;
+
+    const encouragingTips = [
+        "You've got this! Believe in yourself.",
+        "Stay calm and focused. You're well-prepared!",
+        "Take a deep breath. You're about to ace this quiz!",
+        "Remember, every question is an opportunity to shine.",
+        "Trust your knowledge and instincts. You're ready!"
+    ];
+
+    let countdown = 5;
+    const countdownElement = document.getElementById('countdown');
+    const tipElement = document.getElementById('encouragingTip');
+
+    function updateCountdown() {
+        countdownElement.textContent = countdown;
+        
+        if (countdown > 0) {
+            countdown--;
+            setTimeout(updateCountdown, 1000);
+        } else {
+            content.innerHTML = ''; // Clear the transition page
+            startQuiz(quizConfig);
+        }
+    }
+
+    function updateTip() {
+        tipElement.textContent = encouragingTips[Math.floor(Math.random() * encouragingTips.length)];
+        if (countdown > 0) {
+            setTimeout(updateTip, 2500);
+        }
+    }
+
+    updateCountdown();
+    updateTip();
 }
 
 function buildQuizConfig(formData) {

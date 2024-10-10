@@ -120,16 +120,42 @@ function startQuiz(quizConfig) {
                 const timeLeft = endTime - Date.now();
                 if (timeLeft <= 0) {
                     clearInterval(quizTimer);
-                    finishQuiz();
+                    showTimesUpPopup();
                 } else {
                     const minutes = Math.floor(timeLeft / 60000);
                     const seconds = Math.floor((timeLeft % 60000) / 1000);
                     timerDisplay.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                    
+                    if (minutes === 0) {
+                        timerDisplay.classList.add('last-minute');
+                    } else {
+                        timerDisplay.classList.remove('last-minute');
+                    }
                 }
             }, 1000);
         } else {
             timerDisplay.textContent = 'No time limit';
         }
+    }
+
+    function showTimesUpPopup() {
+        const popupHtml = `
+            <div id="timesUpPopup" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]">
+                <div class="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-lg text-center animate-fade-in">
+                    <h2 class="text-2xl font-bold mb-4">Time's Up!</h2>
+                    <p class="mb-6">Your time for the quiz has expired.</p>
+                    <button id="finishQuizBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">
+                        Finish Quiz
+                    </button>
+                </div>
+            </div>
+        `;
+
+        document.body.insertAdjacentHTML('beforeend', popupHtml);
+        document.getElementById('finishQuizBtn').addEventListener('click', () => {
+            document.getElementById('timesUpPopup').remove();
+            finishQuiz();
+        });
     }
 
     function finishQuiz() {
