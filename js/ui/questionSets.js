@@ -139,7 +139,7 @@ function setupAddNewSet() {
 
 function generateQuestionSetCards(sets = questionSets) {
     return sets.map((set) => `
-        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 relative">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300 relative flex flex-col h-full">
             <div class="absolute top-2 right-2 flex space-x-2">
                 <button class="text-blue-500 hover:text-blue-600 edit-set" data-id="${set.id}">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -152,7 +152,7 @@ function generateQuestionSetCards(sets = questionSets) {
                     </svg>
                 </button>
             </div>
-            <div class="tooltip-trigger relative">
+            <div class="tooltip-trigger relative flex-grow">
                 <h3 class="text-xl font-semibold mb-2">${set.title}</h3>
                 <p class="text-gray-600 dark:text-gray-400 mb-4">${set.questions.length} questions</p>
                 <div class="mb-4">
@@ -166,11 +166,11 @@ function generateQuestionSetCards(sets = questionSets) {
                     </div>
                 ` : ''}
             </div>
-            <div class="flex flex-col items-center space-y-2">
-                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded text-sm w-full">
+            <div class="flex flex-col space-y-2 mt-auto">
+                <button class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded text-sm w-full take-quiz" data-id="${set.id}">
                     Take Quiz
                 </button>
-                <div class="flex justify-center space-x-2 w-full">
+                <div class="flex space-x-2">
                     <button class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded text-sm flex-1 flex items-center justify-center view-set" data-id="${set.id}">
                         <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -240,6 +240,14 @@ function setupEditAndDeleteButtons() {
             }
         });
     });
+
+    const takeQuizButtons = document.querySelectorAll('.take-quiz');
+    takeQuizButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const id = e.target.dataset.id;
+            navigateToQuizConfig(id);
+        });
+    });
 }
 
 function createQuestionSetCard(set) {
@@ -267,4 +275,28 @@ function createQuestionSetCard(set) {
     // ... existing edit and delete button code ...
 
     return card;
+}
+
+function navigateToQuizConfig(setId) {
+    // Load the quiz configuration page
+    loadQuizConfig(document.getElementById('content'));
+
+    // Wait for the DOM to update
+    setTimeout(() => {
+        // Select the question set in the dropdown
+        const questionSetsSelect = document.getElementById('questionSets');
+        const option = Array.from(questionSetsSelect.options).find(opt => opt.value === setId);
+        if (option) {
+            option.selected = true;
+            questionSetsSelect.dispatchEvent(new Event('change'));
+        }
+
+        // Set the question count to the maximum available
+        const questionSetConfigs = document.getElementById('questionSetConfigs');
+        const countInput = questionSetConfigs.querySelector(`input[name="questionCount_${setId}"]`);
+        if (countInput) {
+            countInput.value = countInput.max;
+            countInput.dispatchEvent(new Event('input'));
+        }
+    }, 0);
 }
