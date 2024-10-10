@@ -1,3 +1,5 @@
+let chart; // Move this declaration to the top level of the file
+
 function createQuizCounter(container) {
     let questionNumber = 1;
     let correct = 0;
@@ -35,6 +37,9 @@ function createQuizCounter(container) {
                         <h4 class="font-bold text-xl mb-2">Quiz Statistics:</h4>
                         <p>Total Questions Answered: <span id="totalQuestions" class="font-bold">0</span></p>
                         <p>Correct Answer Percentage: <span id="correctPercentage" class="font-bold text-blue-500">0%</span></p>
+                        <div class="mt-4">
+                            <canvas id="performanceChart"></canvas>
+                        </div>
                     </div>
                 </div>
                 <div class="w-full md:w-1/2 pl-0 md:pl-4 border-t md:border-t-0 md:border-l border-gray-300 dark:border-gray-600 pt-6 md:pt-0 mt-6 md:mt-0">
@@ -68,6 +73,56 @@ function createQuizCounter(container) {
 
     let currentFilter = 'all';
 
+    function initChart() {
+        const ctx = document.getElementById('performanceChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [],
+                datasets: [{
+                    label: 'Correct Percentage',
+                    data: [],
+                    borderColor: function(context) {
+                        const index = context.dataIndex;
+                        const value = context.dataset.data[index];
+                        const previousValue = context.dataset.data[index - 1];
+                        
+                        if (index === 0 || value === previousValue) return 'rgb(75, 192, 192)';
+                        return value > previousValue ? 'rgb(75, 192, 75)' : 'rgb(192, 75, 75)';
+                    },
+                    segment: {
+                        borderColor: function(context) {
+                            return context.p0.parsed.y <= context.p1.parsed.y ? 
+                                'rgb(75, 192, 75)' : 'rgb(192, 75, 75)';
+                        },
+                    },
+                    tension: 0.1
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+
+        // Replace the existing click event listener with this:
+        document.getElementById('performanceChart').addEventListener('click', () => openChartModal(chart));
+    }
+
+    function updateChart() {
+        const totalQuestions = correct + incorrect;
+        const correctPercentage = totalQuestions > 0 ? (correct / totalQuestions) * 100 : 0;
+
+        chart.data.labels.push(totalQuestions);
+        chart.data.datasets[0].data.push(correctPercentage);
+        chart.update();
+    }
+
     function updateDisplay() {
         questionNumberEl.textContent = questionNumber;
         correctCountEl.textContent = correct;
@@ -90,6 +145,11 @@ function createQuizCounter(container) {
                 Question ${item.questionNumber}: ${item.isCorrect ? 'Correct' : 'Incorrect'}
             </li>
         `).join('');
+
+        // Scroll to the bottom of the history list
+        historyListEl.scrollTop = historyListEl.scrollHeight;
+
+        updateChart();
     }
 
     function addToHistory(isCorrect) {
@@ -138,5 +198,68 @@ function createQuizCounter(container) {
         document.getElementById(`filter${currentFilter.charAt(0).toUpperCase() + currentFilter.slice(1)}`).classList.add('active');
     }
 
+    initChart();
+
     updateDisplay();
+}
+
+function openChartModal(chartInstance) {
+    console.log('Opening chart modal');
+    
+    const modalContent = `
+        <h3 class="text-2xl font-bold mb-4">Performance Chart</h3>
+        <div style="height: 400px;">
+            <canvas id="modalChart"></canvas>
+        </div>
+    `;
+
+    showModal(modalContent, () => {
+        console.log('Modal closed');
+    });
+
+    setTimeout(() => {
+        const modalCanvas = document.getElementById('modalChart');
+        if (!modalCanvas) {
+            console.error('Modal canvas not found');
+            return;
+        }
+
+        const modalCtx = modalCanvas.getContext('2d');
+        new Chart(modalCtx, {
+            type: 'line',
+            data: {
+                labels: chartInstance.data.labels,
+                datasets: [{
+                    label: chartInstance.data.datasets[0].label,
+                    data: [...chartInstance.data.datasets[0].data],
+                    borderColor: function(context) {
+                        const index = context.dataIndex;
+                        const value = context.dataset.data[index];
+                        const previousValue = context.dataset.data[index - 1];
+                        
+                        if (index === 0 || value === previousValue) return 'rgb(75, 192, 192)';
+                        return value > previousValue ? 'rgb(75, 192, 75)' : 'rgb(192, 75, 75)';
+                    },
+                    segment: {
+                        borderColor: function(context) {
+                            return context.p0.parsed.y <= context.p1.parsed.y ? 
+                                'rgb(75, 192, 75)' : 'rgb(192, 75, 75)';
+                        },
+                    },
+                    tension: chartInstance.data.datasets[0].tension
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+        console.log('Modal chart created');
+    }, 100);
 }
