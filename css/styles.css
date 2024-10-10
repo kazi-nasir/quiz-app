@@ -7,6 +7,20 @@ input:checked ~ .dot {
 input:checked ~ .block {
     background-color: #4CAF50;
 }
+
+/* Styles for the smaller toggle */
+.toggle-answer:checked ~ .dot {
+    transform: translateX(16px);
+}
+.toggle-answer:checked ~ .block {
+    background-color: #4CAF50;
+}
+
+/* Additional spacing for toggle labels */
+.toggle-answer + span {
+    margin-left: 0.5rem;
+}
+
 .tooltip-trigger {
     position: relative;
 }
