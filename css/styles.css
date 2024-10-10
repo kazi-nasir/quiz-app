@@ -154,3 +154,102 @@ select[multiple] option:last-child {
 .animate-bounce-delay-1 { animation-delay: 0.1s, 0s; }
 .animate-bounce-delay-2 { animation-delay: 0.2s, -1.5s; }
 .animate-bounce-delay-3 { animation-delay: 0.3s, -3s; }
+
+/* Enhanced styles for the quiz counter */
+.quiz-counter {
+    background-color: #f8fafc;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.quiz-counter:hover {
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Improved button styles */
+.btn {
+    transition: all 0.3s ease;
+    transform: translateY(0);
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+}
+
+.btn:active {
+    transform: translateY(1px);
+}
+
+/* Enhanced history list styles */
+#historyList {
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    overflow-y: auto;
+    max-height: 300px;
+    padding: 0.5rem;
+}
+
+#historyList li {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 0.5rem;
+}
+
+#historyList li:last-child {
+    border-bottom: none;
+}
+
+#historyList li:hover {
+    background-color: #f1f5f9;
+}
+
+/* Styles for the history filter */
+.history-filter {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.filter-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.filter-btn.active {
+    background-color: #3b82f6;
+    color: white;
+}
+
+/* Improved search input styles */
+#historySearch {
+    transition: all 0.3s ease;
+    background-color: transparent;
+    color: inherit;
+}
+
+#historySearch::placeholder {
+    color: #9CA3AF; /* gray-400 */
+}
+
+.dark #historySearch::placeholder {
+    color: #6B7280; /* gray-500 */
+}
+
+#historySearch:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .quiz-counter {
+        flex-direction: column;
+    }
+
+    .quiz-counter > div {
+        width: 100%;
+        padding: 1rem;
+    }
+}
