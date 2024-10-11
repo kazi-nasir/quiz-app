@@ -118,8 +118,20 @@ function createQuizCounter(container) {
         const totalQuestions = correct + incorrect;
         const correctPercentage = totalQuestions > 0 ? (correct / totalQuestions) * 100 : 0;
 
-        chart.data.labels.push(totalQuestions);
-        chart.data.datasets[0].data.push(correctPercentage);
+        // Remove the last data point if it exists
+        if (chart.data.labels.length > totalQuestions) {
+            chart.data.labels.pop();
+            chart.data.datasets[0].data.pop();
+        }
+
+        // Update or add the current data point
+        if (chart.data.labels.length === totalQuestions) {
+            chart.data.datasets[0].data[totalQuestions - 1] = correctPercentage;
+        } else {
+            chart.data.labels.push(totalQuestions);
+            chart.data.datasets[0].data.push(correctPercentage);
+        }
+
         chart.update();
     }
 
@@ -130,6 +142,35 @@ function createQuizCounter(container) {
         totalQuestionsEl.textContent = correct + incorrect;
         correctPercentageEl.textContent = ((correct / (correct + incorrect)) * 100).toFixed(2) + '%';
 
+        // Move updateChart() call outside of this function
+        // updateChart();
+    }
+
+    function addToHistory(isCorrect) {
+        history.push({ questionNumber, isCorrect });
+        questionNumber++;
+        isCorrect ? correct++ : incorrect++;
+        updateDisplay();
+        updateChart();
+        filterAndSearchHistory(); // Add this line to update the history display
+    }
+
+    document.getElementById('correctBtn').addEventListener('click', () => addToHistory(true));
+    document.getElementById('incorrectBtn').addEventListener('click', () => addToHistory(false));
+
+    document.getElementById('undoBtn').addEventListener('click', () => {
+        if (history.length > 0) {
+            const lastAction = history.pop();
+            questionNumber--;
+            lastAction.isCorrect ? correct-- : incorrect--;
+            updateDisplay();
+            updateChart();
+            filterAndSearchHistory(); // Add this line to update the history display
+        }
+    });
+
+    // Add a new function to handle filtering and searching
+    function filterAndSearchHistory() {
         const searchTerm = historySearchEl.value.toLowerCase();
         const filteredHistory = history.filter(item => {
             const matchesSearch = item.questionNumber.toString().includes(searchTerm) ||
@@ -148,47 +189,27 @@ function createQuizCounter(container) {
 
         // Scroll to the bottom of the history list
         historyListEl.scrollTop = historyListEl.scrollHeight;
-
-        updateChart();
     }
 
-    function addToHistory(isCorrect) {
-        history.push({ questionNumber, isCorrect });
-        questionNumber++;
-        isCorrect ? correct++ : incorrect++;
-        updateDisplay();
-    }
-
-    document.getElementById('correctBtn').addEventListener('click', () => addToHistory(true));
-    document.getElementById('incorrectBtn').addEventListener('click', () => addToHistory(false));
-
-    document.getElementById('undoBtn').addEventListener('click', () => {
-        if (history.length > 0) {
-            const lastAction = history.pop();
-            questionNumber--;
-            lastAction.isCorrect ? correct-- : incorrect--;
-            updateDisplay();
-        }
-    });
-
-    historySearchEl.addEventListener('input', updateDisplay);
+    // Update event listeners
+    historySearchEl.addEventListener('input', filterAndSearchHistory);
 
     filterAllBtn.addEventListener('click', () => {
         currentFilter = 'all';
         updateFilterButtons();
-        updateDisplay();
+        filterAndSearchHistory();
     });
 
     filterCorrectBtn.addEventListener('click', () => {
         currentFilter = 'correct';
         updateFilterButtons();
-        updateDisplay();
+        filterAndSearchHistory();
     });
 
     filterIncorrectBtn.addEventListener('click', () => {
         currentFilter = 'incorrect';
         updateFilterButtons();
-        updateDisplay();
+        filterAndSearchHistory();
     });
 
     function updateFilterButtons() {
