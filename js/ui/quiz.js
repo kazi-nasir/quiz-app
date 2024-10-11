@@ -5,19 +5,19 @@ let timer = null;
 function startQuiz(quizConfig) {
     const quizHtml = `
         <div id="quizContainer" class="fixed inset-0 bg-white dark:bg-gray-900 z-50 flex flex-col">
-            <header class="bg-green-500 text-white p-4 flex justify-between items-center">
-                <h1 class="text-2xl font-bold">Quiz in Progress</h1>
-                <div id="quizTimer" class="text-xl font-semibold"></div>
+            <header class="bg-green-500 text-white p-4 flex flex-col sm:flex-row justify-between items-center">
+                <h1 class="text-xl sm:text-2xl font-bold mb-2 sm:mb-0">Quiz in Progress</h1>
+                <div id="quizTimer" class="text-lg sm:text-xl font-semibold"></div>
             </header>
-            <main class="flex-grow p-8 overflow-y-auto">
-                <div id="questionContainer" class="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+            <main class="flex-grow p-4 sm:p-8 overflow-y-auto">
+                <div id="questionContainer" class="max-w-3xl mx-auto bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md">
                     <!-- Questions will be dynamically inserted here -->
                 </div>
             </main>
-            <footer class="bg-gray-100 dark:bg-gray-800 p-4 flex justify-between items-center">
-                <button id="prevQuestion" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Previous</button>
-                <span id="questionProgress" class="text-lg font-semibold">Question 1 of X</span>
-                <button id="nextQuestion" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Next</button>
+            <footer class="bg-gray-100 dark:bg-gray-800 p-4 flex flex-col sm:flex-row justify-between items-center">
+                <button id="prevQuestion" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mb-2 sm:mb-0 w-full sm:w-auto">Previous</button>
+                <span id="questionProgress" class="text-lg font-semibold my-2 sm:my-0">Question 1 of X</span>
+                <button id="nextQuestion" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded mt-2 sm:mt-0 w-full sm:w-auto">Next</button>
             </footer>
         </div>
     `;
