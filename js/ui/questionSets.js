@@ -252,18 +252,18 @@ function setupEditAndDeleteButtons() {
 
 function createQuestionSetCard(set) {
     const card = document.createElement('div');
-    card.className = 'bg-white dark:bg-gray-800 shadow-md rounded-lg p-6 mb-4';
+    card.className = 'bg-white dark:bg-gray-800 shadow-md rounded-lg p-4 sm:p-6 mb-4';
     card.innerHTML = `
-        <h2 class="text-xl font-semibold mb-2">${set.title}</h2>
+        <h2 class="text-lg sm:text-xl font-semibold mb-2">${set.title}</h2>
         <p class="text-gray-600 dark:text-gray-400 mb-4">${set.questions.length} questions</p>
-        <div class="flex space-x-2">
-            <button class="view-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <div class="flex flex-wrap gap-2">
+            <button class="view-btn bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 sm:px-4 rounded text-sm">
                 View
             </button>
-            <button class="edit-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded">
+            <button class="edit-btn bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-3 sm:px-4 rounded text-sm">
                 Edit
             </button>
-            <button class="delete-btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            <button class="delete-btn bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-3 sm:px-4 rounded text-sm">
                 Delete
             </button>
         </div>

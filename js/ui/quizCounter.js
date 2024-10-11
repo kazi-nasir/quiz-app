@@ -7,13 +7,13 @@ function createQuizCounter(container) {
     let history = [];
 
     const counterHTML = `
-        <div class="max-w-6xl mx-auto">
-            <h2 class="text-3xl font-bold mb-6 text-center">Manual Quiz Counter</h2>
-            <div class="quiz-counter bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md flex flex-col md:flex-row">
-                <div class="w-full md:w-1/2 pr-0 md:pr-4 mb-6 md:mb-0">
+        <div class="max-w-6xl mx-auto px-4">
+            <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-center">Manual Quiz Counter</h2>
+            <div class="quiz-counter bg-white dark:bg-gray-800 p-4 sm:p-8 rounded-lg shadow-md flex flex-col lg:flex-row">
+                <div class="w-full lg:w-1/2 pr-0 lg:pr-4 mb-6 lg:mb-0">
                     <!-- Counter section -->
                     <div class="border-b border-gray-300 dark:border-gray-600 pb-6 mb-6">
-                        <h3 class="text-2xl font-bold mb-4">Question No: <span id="questionNumber" class="text-blue-500">${questionNumber}</span></h3>
+                        <h3 class="text-xl sm:text-2xl font-bold mb-4">Question No: <span id="questionNumber" class="text-blue-500">${questionNumber}</span></h3>
                         <div class="flex flex-col space-y-4 mb-6">
                             <button id="correctBtn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-lg transition duration-300">
                                 Mark Correct
@@ -34,7 +34,7 @@ function createQuizCounter(container) {
                     </div>
                     <!-- Statistics section -->
                     <div class="text-center">
-                        <h4 class="font-bold text-xl mb-2">Quiz Statistics:</h4>
+                        <h4 class="font-bold text-lg sm:text-xl mb-2">Quiz Statistics:</h4>
                         <p>Total Questions Answered: <span id="totalQuestions" class="font-bold">0</span></p>
                         <p>Correct Answer Percentage: <span id="correctPercentage" class="font-bold text-blue-500">0%</span></p>
                         <div class="mt-4">
@@ -42,9 +42,9 @@ function createQuizCounter(container) {
                         </div>
                     </div>
                 </div>
-                <div class="w-full md:w-1/2 pl-0 md:pl-4 border-t md:border-t-0 md:border-l border-gray-300 dark:border-gray-600 pt-6 md:pt-0 mt-6 md:mt-0">
-                    <h4 class="font-bold text-xl mb-2">Answer History:</h4>
-                    <div class="history-filter mb-4">
+                <div class="w-full lg:w-1/2 pl-0 lg:pl-4 border-t lg:border-t-0 lg:border-l border-gray-300 dark:border-gray-600 pt-6 lg:pt-0 mt-6 lg:mt-0">
+                    <h4 class="font-bold text-lg sm:text-xl mb-2">Answer History:</h4>
+                    <div class="history-filter mb-4 flex flex-wrap gap-2">
                         <button id="filterAll" class="filter-btn active">All</button>
                         <button id="filterCorrect" class="filter-btn">Correct</button>
                         <button id="filterIncorrect" class="filter-btn">Incorrect</button>
