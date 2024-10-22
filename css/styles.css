@@ -253,3 +253,10 @@ select[multiple] option:last-child {
         padding: 1rem;
     }
 }
+
+/* P8641 */
+@media (max-width: 767px) {
+    .dark-mode-toggle {
+        display: flex !important;
+    }
+}
