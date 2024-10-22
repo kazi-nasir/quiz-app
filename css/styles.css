@@ -254,9 +254,15 @@ select[multiple] option:last-child {
     }
 }
 
-/* P8641 */
-@media (max-width: 767px) {
+/* Add this to your existing CSS file */
+@media (max-width: 768px) {
     .dark-mode-toggle {
         display: flex !important;
+        justify-content: center; /* Center the toggle */
+        margin: 1rem 0; /* Add some margin for spacing */
+    }
+
+    #darkModeToggle {
+        margin-left: 0; /* Remove any left margin */
     }
 }
