@@ -1,6 +1,156 @@
 const questionSets = [];
 questionSets.push(
     {
+        "id": generateGUID(),
+        "title": "General Knowledge Quiz",
+        "questions": [
+            {
+                "id": generateGUID(),
+                "name": "Which of these elements is the most abundant in Earth's crust?",
+                "options": [
+                    {
+                        "id": generateGUID(),
+                        "name": "Oxygen",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Carbon",
+                        "isCorrect": false
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Iron",
+                        "isCorrect": false
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Silicon",
+                        "isCorrect": false
+                    }
+                ],
+                "isMultiSelect": false,
+                "note": "Tests basic knowledge of Earth's composition."
+            },
+            {
+                "id": generateGUID(),
+                "name": "Select all the planets in our solar system that have rings:",
+                "options": [
+                    {
+                        "id": generateGUID(),
+                        "name": "Saturn",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Jupiter",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Uranus",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Neptune",
+                        "isCorrect": true
+                    }
+                ],
+                "isMultiSelect": true,
+                "note": "Tests knowledge of planetary characteristics in our solar system."
+            },
+            {
+                "id": generateGUID(),
+                "name": "Who painted the Mona Lisa?",
+                "options": [
+                    {
+                        "id": generateGUID(),
+                        "name": "Leonardo da Vinci",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Michelangelo",
+                        "isCorrect": false
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Raphael",
+                        "isCorrect": false
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Vincent van Gogh",
+                        "isCorrect": false
+                    }
+                ],
+                "isMultiSelect": false,
+                "note": "Tests knowledge of art history."
+            },
+            {
+                "id": generateGUID(),
+                "name": "Which of these inventions came first?",
+                "options": [
+                    {
+                        "id": generateGUID(),
+                        "name": "Printing Press",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Steam Engine",
+                        "isCorrect": false
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Telephone",
+                        "isCorrect": false
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Light Bulb",
+                        "isCorrect": false
+                    }
+                ],
+                "isMultiSelect": false,
+                "note": "Tests knowledge of historical inventions and their chronological order."
+            },
+            {
+                "id": generateGUID(),
+                "name": "Which of these countries share a border with China?",
+                "options": [
+                    {
+                        "id": generateGUID(),
+                        "name": "Russia",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Mongolia",
+                        "isCorrect": true
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Thailand",
+                        "isCorrect": false
+                    },
+                    {
+                        "id": generateGUID(),
+                        "name": "Japan",
+                        "isCorrect": false
+                    }
+                ],
+                "isMultiSelect": true,
+                "note": "Tests knowledge of world geography and international borders."
+            }
+        ],
+        "note": "This question set covers various topics in general knowledge, including science, art, history, and geography. It is designed to test broad knowledge across different fields.",
+        "tags": ["General Knowledge", "Science", "History", "Geography", "Art"]
+    }
+);
+questionSets.push(
+    {
         "id": "generateGUID()",
         "title": "CSE101 Quiz",
         "questions": [
@@ -288,4 +438,4 @@ questionSets.push(
         "note": "This question set covers fundamental topics in CSE101, including data structures, algorithms, and basic computer science principles. It is designed to assess foundational knowledge for introductory computer science students.",
         "tags": ["CSE101", "Computer Science", "Algorithms", "Data Structures"]
     }
-)
+);

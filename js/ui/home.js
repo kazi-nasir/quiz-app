@@ -2,7 +2,7 @@ function loadHomeContent(content) {
     content.innerHTML = `
         <div class="flex flex-col items-center">
             <h1 class="text-4xl font-bold mb-6 animate-fade-in">Welcome to Quiz App</h1>
-            <p class="mb-6 text-lg text-gray-700 animate-slide-in-right">Your ultimate platform for creating and taking quizzes!</p>
+            <p class="mb-6 text-lg text-gray-700 animate-slide-in-right">Your personal platform for creating and taking quizzes!</p>
             
             <div class="flex gap-4 mb-6">
                 <button id="startGuideBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-5 rounded-lg shadow-lg transition-transform transform hover:scale-105 animate-pulse">
